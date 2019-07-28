@@ -15,6 +15,7 @@ namespace GigHub.Controllers
         {
             _context = new ApplicationDbContext();
         }
+        [Authorize]
         public ActionResult Create()
         {
             GigFormViewModel viewModel = new GigFormViewModel
