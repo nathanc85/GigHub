@@ -23,6 +23,12 @@ namespace GigHub.Controllers
         public IHttpActionResult Attend([FromBody] int gigId)
         {
             var userId = User.Identity.GetUserId();
+            var exists = _context.Attendances.Any(a => a.AttendeeId == userId && a.GigId == gigId);
+
+            if (exists)
+            {
+                return BadRequest("The attendance already exists!");
+            }
             var attendance = new Attendance
             {
                 GigId = gigId,
