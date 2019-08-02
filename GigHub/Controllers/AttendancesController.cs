@@ -1,4 +1,5 @@
-﻿using GigHub.Models;
+﻿using GigHub.Dtos;
+using GigHub.Models;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -20,10 +21,10 @@ namespace GigHub.Controllers
         }
         
         [HttpPost]
-        public IHttpActionResult Attend([FromBody] int gigId)
+        public IHttpActionResult Attend(AttendanceDto dto)
         {
             var userId = User.Identity.GetUserId();
-            var exists = _context.Attendances.Any(a => a.AttendeeId == userId && a.GigId == gigId);
+            var exists = _context.Attendances.Any(a => a.AttendeeId == userId && a.GigId == dto.GigId);
 
             if (exists)
             {
@@ -31,7 +32,7 @@ namespace GigHub.Controllers
             }
             var attendance = new Attendance
             {
-                GigId = gigId,
+                GigId = dto.GigId,
                 AttendeeId = userId
             };
 
