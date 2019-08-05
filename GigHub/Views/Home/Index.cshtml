@@ -35,16 +35,29 @@
         $(document).ready(function () {
             $(".js-toggle-attendance").click(function (e) {
                 var button = $(e.target);
-                $.post("/api/attendances", { GigId : button.attr("data-gig-id") })
+                $.post("/api/attendances", { GigId: button.attr("data-gig-id") })
                     .done(function () {
                         button.removeClass("btn-default")
                             .addClass("btn-info")
                             .text("Going!")
                     })
                     .fail(function () {
-                        alert("Something failed!");
+                        alert("Something failed! #Attendance");
                     });
             });
+
+            $(".js-toggle-follow").click(function (e) {
+                var button = $(e.target);
+                $.post("/api/followings/", { FolloweeId: button.attr("data-user-id") })
+                    .done(function () {
+                        button.addClass("font-weight-bold")
+                            .text("Following");
+                    })
+                    .fail(function () {
+                        alert("Something failed! #Following");
+                    })
+            });
         });
+
     </script>
 }
