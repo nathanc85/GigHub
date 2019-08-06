@@ -28,10 +28,11 @@ namespace GigHub.Controllers
             var viewModel = new GigsViewModel
             {
                 upcomingGigs = upcomingGigs,
-                ShowActions = isAuth
+                ShowActions = isAuth,
+                Heading = "Upcoming Gigs"
             };
 
-            return View(viewModel);
+            return View("Gigs", viewModel);
         }
 
         public ActionResult About()
