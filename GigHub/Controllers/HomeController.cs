@@ -1,5 +1,6 @@
 ﻿using GigHub.Models;
 using GigHub.ViewModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -24,7 +25,7 @@ namespace GigHub.Controllers
             .Include(g => g.Genre)
             .Where(g => g.DateTime > DateTime.Now);
 
-            var viewModel = new HomeViewModel
+            var viewModel = new GigsViewModel
             {
                 upcomingGigs = upcomingGigs,
                 ShowActions = isAuth
