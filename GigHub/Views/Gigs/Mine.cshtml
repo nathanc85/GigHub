@@ -20,7 +20,7 @@
             </div>
             <div class="details">
                 <span class="artist">
-                    @gig.Venue                   
+                    @gig.Venue
                 </span>
                 <span class="genre">
                     @gig.Genre.Name
@@ -29,9 +29,38 @@
                     <a href="@Url.Action("Edit", "Gigs", new { id = gig.Id})">
                         Edit
                     </a>
-                    <a href="#">Remove</a>
+                    <a href="#" class="js-cancel-gig" data-gig-id="@gig.Id">
+                        Cancel
+                    </a>
                 </div>
             </div>
         </li>
     }
 </ul>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            $(".js-cancel-gig").click(function (e) {
+                var link = $(e.target);
+
+                if (confirm("Are you sure you want to cancel the gig?")) {
+                    $.ajax({
+                        url: "/api/gigs/" + link.attr("data-gig-id"),
+                        method: "DELETE",
+                        
+                    })
+                        .done(function () {
+                            link.parents("li").fadeOut(function () {
+                                $(this).remove();
+                            })
+                        })
+                        .fail(function () {
+                            alert("Unable to delete the gig.");
+                        })
+                }
+            });
+        });
+    </script>
+}
