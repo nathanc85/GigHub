@@ -59,9 +59,10 @@ namespace GigHub.Controllers
         {
             GigFormViewModel viewModel = new GigFormViewModel
             {
-                Genres = _context.Genres.ToList()
+                Genres = _context.Genres.ToList(),
+                Heading = "Create gig"
             };
-            return View(viewModel);
+            return View("GigForm",viewModel);
         }
         [Authorize]
         public ActionResult Edit(int id)
@@ -74,10 +75,11 @@ namespace GigHub.Controllers
                 Date = gig.DateTime.ToString("MM/dd/yyyy"),
                 Time = gig.DateTime.ToString("HH:mm"),
                 Genre = gig.GenreId,               
-                Venue = gig.Venue
+                Venue = gig.Venue,
+                Heading = "Edit gig"
             };
 
-            return View("Create", viewModel);
+            return View("GigForm", viewModel);
         }
 
         [Authorize]
