@@ -30,6 +30,29 @@ span.field-validation-error {
 }
 
 /* Bootstrap overrides */
+.voffset1 {
+    margin-top: 2px;
+}
+
+.voffset2 {
+    margin-top: 5px;
+}
+
+.voffset3 {
+    margin-top: 10px;
+}
+
+.voffset4 {
+    margin-top: 20px;
+}
+
+.voffset5 {
+    margin-top: 40px;
+}
+
+.voffset6 {
+    margin-top: 80px;
+}
 
 .navbar-inverse {
     background-color: #ff4342;
@@ -137,22 +160,11 @@ body, h1, h2, h3, h4, h5, h6,
                 font-size: 15px;
             }
 
-.voffset1 {
-    margin-top: 2px;
-}
-.voffset2 {
-    margin-top: 5px;
-}
-.voffset3 {
-    margin-top: 10px;
-}
-.voffset4 {
-    margin-top: 20px;
-}
-.voffset5 {
-    margin-top: 40px;
-}
-.voffset6 {
-    margin-top: 80px;
-}
+            .gigs > li .actions {
+                font-size: 15px;
+                display: none;
+            }
 
+            .gigs > li:hover .actions{
+                display: block;
+            }
