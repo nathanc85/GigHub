@@ -44,22 +44,39 @@
         $(document).ready(function () {
             $(".js-cancel-gig").click(function (e) {
                 var link = $(e.target);
+        // TO DO : make the confirm modal work
+                bootbox.dialog({
+                    title: "Confirm",
+                    message: "Are you sure you want to cancel the gig?",
+                    buttons: {
+                        no: {
+                            label: 'No',
+                            className: 'btn-default',
+                            callback: function () {
+                                bootbox.hideAll();
+                            }
+                        },
+                        yes: {
+                            label: 'Yes',
+                            className: 'btn-danger',
+                            callback: function () {
+                                $.ajax({
+                                    url: "/api/gigs/" + link.attr("data-gig-id"),
+                                    method: "DELETE",
 
-                if (confirm("Are you sure you want to cancel the gig?")) {
-                    $.ajax({
-                        url: "/api/gigs/" + link.attr("data-gig-id"),
-                        method: "DELETE",
-                        
-                    })
-                        .done(function () {
-                            link.parents("li").fadeOut(function () {
-                                $(this).remove();
-                            })
-                        })
-                        .fail(function () {
-                            alert("Unable to delete the gig.");
-                        })
-                }
+                                })
+                                    .done(function () {
+                                        link.parents("li").fadeOut(function () {
+                                            $(this).remove();
+                                        })
+                                    })
+                                    .fail(function () {
+                                        alert("Unable to delete the gig.");
+                                    });
+                            }
+                        }
+                    }
+                });
             });
         });
     </script>
