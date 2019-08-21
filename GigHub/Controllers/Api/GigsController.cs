@@ -36,12 +36,7 @@ namespace GigHub.Controllers.Api
             gig.IsCanceled = true;
 
             // Create the notification for the gig being cancelled.
-            var notification = new Notification()
-            {
-                DateTime = DateTime.Now,
-                Gig = gig,
-                NotificationType = NotificationType.GigCanceled
-            };
+            var notification = new Notification(NotificationType.GigCanceled, gig);
 
             // Get a list of all the attendees that will get the notification.
             var attendees = _context.Attendances
@@ -53,13 +48,7 @@ namespace GigHub.Controllers.Api
             // aka instances of the notification for each one of them.
             foreach(var attendee in attendees)
             {
-                var userNotification = new UserNotification
-                {
-                    User = attendee,
-                    Notification = notification
-                };
-
-                _context.UserNotifications.Add(userNotification);
+                attendee.Notify(notification);
             }
 
             _context.SaveChanges();
