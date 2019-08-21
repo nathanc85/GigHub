@@ -32,7 +32,7 @@ namespace GigHub.Models
             IsCanceled = true;
 
             // Create the notification for the gig being cancelled.
-            var notification = new Notification(NotificationType.GigCanceled, this);
+            var notification = Notification.GigCanceled(this);
 
             // Loop throught all the attenndees and create UserNotifications
             // aka instances of the notification for each one of them.
@@ -40,6 +40,19 @@ namespace GigHub.Models
             {
                 attendee.Notify(notification);
             }
+        }
+
+        public void Update(DateTime dateTime, string venue, byte genre)
+        {
+            // Create the notification for the gig being updated.
+            var notification = Notification.GigUpdated(this, DateTime, Venue);
+
+            Venue = venue;
+            DateTime = dateTime;
+            GenreId = genre;
+
+            foreach (var attendee in Attendances.Select(a => a.Attendee))
+                attendee.Notify(notification);
         }
     }
 }
