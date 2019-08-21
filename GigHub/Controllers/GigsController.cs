@@ -23,12 +23,14 @@ namespace GigHub.Controllers
             var currentId = User.Identity.GetUserId();
             var isAuth = User.Identity.IsAuthenticated;
             var gigs = _context.Gigs
-                .Where(g => g.ArtistId == currentId && g.DateTime >= DateTime.Now)
+                .Where(g => g.ArtistId == currentId
+                    && g.DateTime >= DateTime.Now
+                    && !g.IsCanceled)
                 .Include(g => g.Genre)
                 .ToList();
 
             return View(gigs);
-                
+
         }
 
         [Authorize]
@@ -62,7 +64,7 @@ namespace GigHub.Controllers
                 Genres = _context.Genres.ToList(),
                 Heading = "Create gig"
             };
-            return View("GigForm",viewModel);
+            return View("GigForm", viewModel);
         }
 
         [Authorize]
