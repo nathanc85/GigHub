@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using GigHub.App_Start;
 using GigHub.Models;
 using Microsoft.AspNet.Identity;
 
@@ -29,25 +30,8 @@ namespace GigHub.Controllers.Api
                 .Include(g => g.Gig.Artist)
                 .ToList();
 
-            return notifications.Select(n => new NotificationDto()
-            {
-                DateTime = n.DateTime,
-                NotificationType = n.NotificationType,
-                OriginalDateTime = n.OriginalDateTime,
-                OriginalVenue = n.OriginalVenue,
-                Gig = new GigDto()
-                {
-                    Id = n.Gig.Id,
-                    IsCanceled = n.Gig.IsCanceled,
-                    DateTime = n.Gig.DateTime,
-                    Venue = n.Gig.Venue,
-                    Artist = new UserDto()
-                    {
-                        Id = n.Gig.Artist.Id,
-                        Name = n.Gig.Artist.Name
-                    }
-                }
-            });
+            var mapper = MappingConfig.GetMapper();
+            return notifications.Select(mapper.Map<Notification, NotificationDto>);
         }
     }
 }
