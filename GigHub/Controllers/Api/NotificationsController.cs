@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using GigHub.App_Start;
+using GigHub.Dtos;
 using GigHub.Models;
 using Microsoft.AspNet.Identity;
 
