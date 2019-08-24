@@ -40,13 +40,63 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+    <script type="text/x-template" id="notifications-template">
+        <ul>
+            <%
+            _.each(notifications, function(notification){
+
+            if (notification.notificationType == 1) { %>
+            <li> <%= notification.gig.artist.name %> has canceled the gig at <%= notification.gig.venue %> at <%= notification.gig.dateTime %>.</li>
+            <% }
+
+            else if (notification.notificationType == 2) {
+            var changes = [];
+            var originalValues = [];
+            var newValues = [];
+
+            if (notification.gig.venue != notification.originalVenue) {
+            changes.push("venue");
+            originalValues.push(notification.originalVenue);
+            newValues.push(notification.gig.venue)
+            }
+            if (notification.gig.dateTime != notification.originalDateTime) {
+            changes.push("date/time");
+            originalValues.push(notification.originalDateTime);
+            newValues.push(notification.gig.dateTime)
+            }%>
+
+            <li> <%= notification.gig.artist.name %> has updated the <%= changes.join(" and ") %> to <%= newValues.join('/') %>.</li>
+            <% }
+
+            });
+            %>
+        </ul>
+    </script>
     <script>
         $(document).ready(function () {
             $.getJSON("/api/notifications", function (notifications) {
+                // Don't show anything if there are no notifications.
+                if (notifications.length == 0) {
+                    return;
+                }
+
+                // Set the notification count icon.
                 $(".js-notifications-count")
                     .text(notifications.length)
                     .removeClass("hide")
                     .addClass("animated bounceInDown");
+
+                // Set the notifications in the popover.
+                $(".notifications").popover({
+                    html: true,
+                    title: "Notifications",
+                    content: function () {
+                        var compiled = _.template($("#notifications-template").html());
+                        var html = compiled({ notifications: notifications });
+                        return html;
+                    },
+                    placement: "bottom"
+                });
             });
         });
     </script>
