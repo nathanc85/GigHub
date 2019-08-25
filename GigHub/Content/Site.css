@@ -30,6 +30,11 @@ span.field-validation-error {
 }
 
 /* Bootstrap overrides */
+
+.popover {
+    box-shadow:none;
+    -webkit-box-shadow: none;
+}
 .voffset1 {
     margin-top: 2px;
 }
@@ -171,11 +176,33 @@ body, h1, h2, h3, h4, h5, h6,
                 font-size: 15px;
             }
 
-            .gigs > li .actions {
-                font-size: 15px;
-                display: none;
-            }
+        .gigs > li .actions {
+            font-size: 15px;
+            display: none;
+        }
 
-            .gigs > li:hover .actions{
-                display: block;
-            }
+        .gigs > li:hover .actions {
+            display: block;
+        }
+
+.popover-notifications .popover-content {
+    padding: 0;
+}
+
+.popover-notifications ul.notifications {
+    list-style: none;
+    padding-left: 0;
+}
+
+    .popover-notifications ul.notifications > li {
+        border-bottom: 1px solid #ddd;
+        padding: 10px;
+    }
+
+        .popover-notifications ul.notifications > li:last-child {
+            border-bottom: none;
+        }
+
+.popover-notifications .highlights {
+    font-weight: 900;
+}
