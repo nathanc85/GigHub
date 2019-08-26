@@ -97,7 +97,25 @@
                     placement: "bottom",
                     template: '<div class="popover popover-notifications" role="tooltip"><div class="arrow"></div><h3 class="popover-header"></h3><div class="popover-content"></div></div>'
                 }).on('shown.bs.popover', function () {
-                    console.log("Popover shown");
+                    // console.log("Popover shown");
+                    //$.post("/api/attendances", { GigId: button.attr("data-gig-id") })
+                    //.done(function () {
+                    //    button.removeClass("btn-default")
+                    //        .addClass("btn-info")
+                    //        .text("Going!")
+                    //})
+                    //.fail(function () {
+                    //    alert("Something failed! #Attendance");
+                    //});
+                    $.post("/api/notifications/setAsRead")
+                        .done(function () {
+                            $(".js-notifications-count")
+                                .text("")
+                                .hide();
+                        })
+                        .fail(function () {
+                            alert("Something went wrong when marking the notifications as read!")
+                        });
                 });
             });
         });
