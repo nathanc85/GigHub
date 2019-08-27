@@ -177,3 +177,6 @@ h6,
 .popover-notifications ul.notifications .highlights {
   font-weight: 900;
 }
+#SearchGigs {
+  width: 300px;
+}
