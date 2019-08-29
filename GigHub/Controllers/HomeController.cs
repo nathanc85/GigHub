@@ -17,7 +17,7 @@ namespace GigHub.Controllers
         {
             _context = new ApplicationDbContext();
         }
-        public ActionResult Index()
+        public ActionResult Index(string query = null)
         {
             var isAuth = User.Identity.IsAuthenticated;
 
@@ -25,6 +25,14 @@ namespace GigHub.Controllers
             .Include(g => g.Genre)
             .Where(g => g.DateTime > DateTime.Now && !g.IsCanceled);
 
+            if (!String.IsNullOrWhiteSpace(query))
+            {
+                upcomingGigs = upcomingGigs
+                    .Where(u => u.Artist.Name.Contains(query)
+                    || u.Genre.Name.Contains(query)
+                    || u.Venue.Contains(query));
+                    
+            }
             var viewModel = new GigsViewModel
             {
                 upcomingGigs = upcomingGigs,
