@@ -62,15 +62,33 @@
         $(document).ready(function () {
             $(".js-toggle-attendance").click(function (e) {
                 var button = $(e.target);
-                $.post("/api/attendances", { GigId: button.attr("data-gig-id") })
-                    .done(function () {
-                        button.removeClass("btn-default")
-                            .addClass("btn-info")
-                            .text("Going!")
+                if (button.hasClass("btn-default")) {
+                    $.post("/api/attendances", { GigId: button.attr("data-gig-id") })
+                        .done(function () {
+                            button.removeClass("btn-default")
+                                .addClass("btn-info")
+                                .text("Going!")
+                        })
+                        .fail(function () {
+                            alert("Something failed! #Attendance");
+                        });
+                }
+                else {
+                    $.ajax({
+                        url: "/api/attendances/" + button.attr("data-gig-id"),
+                        method: "DELETE"
                     })
-                    .fail(function () {
-                        alert("Something failed! #Attendance");
-                    });
+                        .done(function () {
+                            button
+                                .removeClass("btn-info")
+                                .addClass("btn-default")
+                                .text("Going?");
+                        })
+                        .fail(function () {
+                            alert("Something went wrong when trying to remove a gig from my calendar!")
+                        });
+                }
+
             });
 
             $(".js-toggle-follow").click(function (e) {
