@@ -20,19 +20,25 @@ namespace GigHub.Controllers
         public ActionResult Index(string query = null)
         {
             var isAuth = User.Identity.IsAuthenticated;
+            var currentUser = User.Identity.GetUserId();
 
-            var upcomingGigs = _context.Gigs.Include(g => g.Artist)
-            .Include(g => g.Genre)
-            .Where(g => g.DateTime > DateTime.Now && !g.IsCanceled);
+            // Get all the upcoming gigs.
+            var upcomingGigs = _context.Gigs
+                .Include(g => g.Artist)
+                .Include(g => g.Genre)
+                .Where(g => g.DateTime > DateTime.Now && !g.IsCanceled);
 
+            // Filter based on the query search.
             if (!String.IsNullOrWhiteSpace(query))
             {
                 upcomingGigs = upcomingGigs
                     .Where(u => u.Artist.Name.Contains(query)
                     || u.Genre.Name.Contains(query)
                     || u.Venue.Contains(query));
-                    
+
             }
+
+            // Create the model.
             var viewModel = new GigsViewModel
             {
                 upcomingGigs = upcomingGigs,

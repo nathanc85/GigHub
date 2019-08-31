@@ -59,7 +59,7 @@ namespace GigHub.Controllers
         [HttpPost]
         public ActionResult Search(GigsViewModel viewModel)
         {
-            return RedirectToAction("Index", "Home", new { query = viewModel.SearchTerm});
+            return RedirectToAction("Index", "Home", new { query = viewModel.SearchTerm });
         }
 
         [Authorize]
@@ -138,6 +138,36 @@ namespace GigHub.Controllers
             _context.SaveChanges();
 
             return RedirectToAction("Mine", "Gigs");
+        }
+
+        public ActionResult GigDetails(int id)
+        {
+            var gig = _context.Gigs
+                .Include(a => a.Artist)
+                .Include(g => g.Genre)
+                .SingleOrDefault(g => g.Id == id);
+
+            if (gig == null)
+            {
+                return HttpNotFound();
+            }
+
+            var viewModel = new GigDetailsViewModel { Gig = gig };
+
+            if (User.Identity.IsAuthenticated)
+            {
+                var currentUser = User.Identity.GetUserId();
+
+                // Find out if the user is going.
+                viewModel.IsAttending = _context.Attendances
+                    .Any(a => a.GigId == id && a.AttendeeId == currentUser);
+
+                // Find out if the user is following the artist.
+                viewModel.IsFollowing = _context.Followings
+                    .Any(f => f.FolloweeId == gig.ArtistId && f.FollowerId == currentUser);
+            }
+
+            return View("GigDetails", viewModel);
         }
     }
 }

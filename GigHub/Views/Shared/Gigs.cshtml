@@ -33,7 +33,7 @@
             </div>
             <div class="details">
                 <span class="artist">
-                    @gig.Artist.Name
+                    @Html.ActionLink(gig.Artist.Name, "GigDetails", "Gigs", new { id = gig.Id}, null)
                     @if (gig.IsCanceled)
                     {
                         <span class="label label-warning">Canceled</span>
