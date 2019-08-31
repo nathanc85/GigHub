@@ -38,10 +38,17 @@ namespace GigHub.Controllers
 
             }
 
+            // Get all the gigs the current user is attending.
+            var attendances = _context.Attendances
+                .Where(a => a.AttendeeId == currentUser && a.Gig.DateTime > DateTime.Now)
+                .ToList()
+                .ToLookup(a => a.GigId);
+
             // Create the model.
             var viewModel = new GigsViewModel
             {
-                upcomingGigs = upcomingGigs,
+                UpcomingGigs = upcomingGigs,
+                Attendances = attendances,
                 ShowActions = isAuth,
                 Heading = "Upcoming Gigs"
             };

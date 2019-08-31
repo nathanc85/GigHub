@@ -20,7 +20,7 @@
 }
 
 <ul class="gigs voffset4">
-    @foreach (var gig in Model.upcomingGigs)
+    @foreach (var gig in Model.UpcomingGigs)
     {
         <li>
             <div class="date">
@@ -33,7 +33,7 @@
             </div>
             <div class="details">
                 <span class="artist">
-                    @Html.ActionLink(gig.Artist.Name, "GigDetails", "Gigs", new { id = gig.Id}, null)
+                    @Html.ActionLink(gig.Artist.Name, "GigDetails", "Gigs", new { id = gig.Id }, null)
                     @if (gig.IsCanceled)
                     {
                         <span class="label label-warning">Canceled</span>
@@ -48,7 +48,8 @@
                 </span>
                 @if (Model.ShowActions && !gig.IsCanceled)
                 {
-                    <button data-gig-id="@gig.Id" class="btn btn-default pull-right js-toggle-attendance">Going?</button>
+                    @*<button data-gig-id="@gig.Id" class="btn btn-default pull-right js-toggle-attendance">Going?</button>*@
+                    <button data-gig-id="@gig.Id" class="btn @(Model.Attendances.Contains(gig.Id) ? "btn-info" : "btn-default" ) pull-right js-toggle-attendance">Going?</button>
                 }
             </div>
         </li>

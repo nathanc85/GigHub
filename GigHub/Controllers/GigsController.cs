@@ -36,19 +36,26 @@ namespace GigHub.Controllers
         [Authorize]
         public ActionResult Attending()
         {
-            var currentId = User.Identity.GetUserId();
+            var currentUser = User.Identity.GetUserId();
             var isAuth = User.Identity.IsAuthenticated;
 
             var gigs = _context.Attendances
-                .Where(a => a.AttendeeId == currentId)
+                .Where(a => a.AttendeeId == currentUser)
                 .Select(g => g.Gig)
                 .Include(a => a.Artist)
                 .Include(g => g.Genre)
                 .ToList();
 
+            // Get all the gigs the current user is attending.
+            var attendances = _context.Attendances
+                .Where(a => a.AttendeeId == currentUser && a.Gig.DateTime > DateTime.Now)
+                .ToList()
+                .ToLookup(a => a.GigId);
+
             var viewModel = new GigsViewModel()
             {
-                upcomingGigs = gigs,
+                UpcomingGigs = gigs,
+                Attendances = attendances,
                 ShowActions = isAuth,
                 Heading = "Gigs I'm Attending"
             };
