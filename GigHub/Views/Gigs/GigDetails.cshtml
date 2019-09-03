@@ -4,31 +4,33 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div>
-    <div class="h1">
-        <span>@Model.Gig.Artist.Name</span>
-        <span>
-            @if (Model.IsFollowing)
-            {
-                <button class="btn btn-info">
-                    Following
-                </button>
-            }
-            else if (User.Identity.IsAuthenticated)
-            {
-                <button class="btn btn-default">
-                    Follow
-                </button>
-            }
-
-        </span>
-
-
-    </div>
-    <div>Performing at @Model.Gig.Venue on @Model.Gig.DateTime.ToString("MM/dd/yyyy") at @Model.Gig.DateTime.ToString("hh:mm")</div>
-    @if (Model.IsAttending && User.Identity.IsAuthenticated)
+<h2>
+    @Model.Gig.Artist.Name
+    @if (User.Identity.IsAuthenticated)
     {
-        <div>You are going to this event</div>
+        if (Model.IsFollowing)
+        {
+            <button class="btn btn-info js-toggle-follow" data-user-id="@Model.Gig.ArtistId">Following</button>
+        }
+        else
+        {
+            <button class="btn btn-default js-toggle-follow" data-user-id="@Model.Gig.ArtistId">Follow</button>
+        }
     }
+</h2>
+<p>
+    Performing at @Model.Gig.Venue on @Model.Gig.DateTime.ToString("d MMM") at @Model.Gig.DateTime.ToString("HH:mm")
+</p>
 
-</div>
+@if (User.Identity.IsAuthenticated && Model.IsAttending)
+{
+    <p>You are going to this event. </p>
+}
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            GigDetailsController.init();
+        });
+    </script>
+}

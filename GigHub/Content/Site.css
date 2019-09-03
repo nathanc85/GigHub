@@ -160,6 +160,11 @@ h6,
 .gigs > li:hover .actions {
   display: block;
 }
+.genre {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 4px;
+}
 .popover-notifications .popover-content {
   padding: 0;
 }

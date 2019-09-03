@@ -11,7 +11,9 @@ namespace GigHub
             // Create a bundle with custom js.
             bundles.Add(new ScriptBundle("~/bundles/app").Include(
                     "~/Scripts/app/services/attendanceService.js",
+                    "~/Scripts/app/services/followingService.js",
                     "~/Scripts/app/controllers/gigsController.js",
+                    "~/Scripts/app/controllers/gigDetailsController.js",
                     "~/Scripts/app/app.js"
                 ));
 

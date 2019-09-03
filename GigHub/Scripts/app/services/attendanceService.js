@@ -1,11 +1,11 @@
 ﻿var AttendanceService = function () {
-    var createAttendance = function () {
+    var createAttendance = function (gigId, done, fail) {
         $.post("/api/attendances", { GigId: gigId })
             .done(done)
             .fail(fail);
     };
 
-    var deleteAttendace = function (gigId, done, fail) {
+    var deleteAttendance = function (gigId, done, fail) {
         $.ajax({
             url: "/api/attendances/" + gigId,
             method: "DELETE"
@@ -16,6 +16,6 @@
 
     return {
         createAttendance: createAttendance,
-        deleteAttendance: deleteAttendace
+        deleteAttendance: deleteAttendance
     }
-}()
+}();
