@@ -37,30 +37,35 @@ namespace GigHub.Controllers
         public ActionResult Attending()
         {
             var currentUser = User.Identity.GetUserId();
-            var isAuth = User.Identity.IsAuthenticated;
 
-            var gigs = _context.Attendances
+            // Get all the gigs the current user is attending.
+
+            var viewModel = new GigsViewModel()
+            {
+                UpcomingGigs = GetGigsUserAttending(currentUser),
+                Attendances = GetFutureAttendances(currentUser).ToLookup(a => a.GigId),
+                ShowActions = User.Identity.IsAuthenticated,
+                Heading = "Gigs I'm Attending"
+            };
+
+            return View("Gigs", viewModel);
+        }
+
+        private List<Attendance> GetFutureAttendances(string currentUser)
+        {
+            return _context.Attendances
+                            .Where(a => a.AttendeeId == currentUser && a.Gig.DateTime > DateTime.Now)
+                            .ToList();
+        }
+
+        private List<Gig> GetGigsUserAttending(string currentUser)
+        {
+            return _context.Attendances
                 .Where(a => a.AttendeeId == currentUser)
                 .Select(g => g.Gig)
                 .Include(a => a.Artist)
                 .Include(g => g.Genre)
                 .ToList();
-
-            // Get all the gigs the current user is attending.
-            var attendances = _context.Attendances
-                .Where(a => a.AttendeeId == currentUser && a.Gig.DateTime > DateTime.Now)
-                .ToList()
-                .ToLookup(a => a.GigId);
-
-            var viewModel = new GigsViewModel()
-            {
-                UpcomingGigs = gigs,
-                Attendances = attendances,
-                ShowActions = isAuth,
-                Heading = "Gigs I'm Attending"
-            };
-
-            return View("Gigs", viewModel);
         }
 
         [HttpPost]
