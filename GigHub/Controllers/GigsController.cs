@@ -1,4 +1,5 @@
 ﻿using GigHub.Models;
+using GigHub.Repositories;
 using GigHub.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
@@ -12,10 +13,14 @@ namespace GigHub.Controllers
 {
     public class GigsController : Controller
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
+        private readonly AttendanceRepository _attendanceRepository;
+        private readonly GigRepository _gigRepository;
         public GigsController()
         {
             _context = new ApplicationDbContext();
+            _attendanceRepository = new AttendanceRepository(_context);
+            _gigRepository = new GigRepository(_context);
         }
         [Authorize]
         public ActionResult Mine()
@@ -42,30 +47,13 @@ namespace GigHub.Controllers
 
             var viewModel = new GigsViewModel()
             {
-                UpcomingGigs = GetGigsUserAttending(currentUser),
-                Attendances = GetFutureAttendances(currentUser).ToLookup(a => a.GigId),
+                UpcomingGigs = _gigRepository.GetGigsUserAttending(currentUser),
+                Attendances = _attendanceRepository.GetFutureAttendances(currentUser).ToLookup(a => a.GigId),
                 ShowActions = User.Identity.IsAuthenticated,
                 Heading = "Gigs I'm Attending"
             };
 
             return View("Gigs", viewModel);
-        }
-
-        private List<Attendance> GetFutureAttendances(string currentUser)
-        {
-            return _context.Attendances
-                            .Where(a => a.AttendeeId == currentUser && a.Gig.DateTime > DateTime.Now)
-                            .ToList();
-        }
-
-        private List<Gig> GetGigsUserAttending(string currentUser)
-        {
-            return _context.Attendances
-                .Where(a => a.AttendeeId == currentUser)
-                .Select(g => g.Gig)
-                .Include(a => a.Artist)
-                .Include(g => g.Genre)
-                .ToList();
         }
 
         [HttpPost]
