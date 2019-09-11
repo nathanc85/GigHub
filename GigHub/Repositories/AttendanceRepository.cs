@@ -20,7 +20,11 @@ namespace GigHub.Repositories
                             .Where(a => a.AttendeeId == currentUser && a.Gig.DateTime > DateTime.Now)
                             .ToList();
         }
+
+        public bool UserIsAttendingGig(int gigId, string userId)
+        {
+            return _context.Attendances
+                    .Any(a => a.GigId == gigId && a.AttendeeId == userId);
+        }
     }
-
-
 }
