@@ -60,10 +60,5 @@ namespace GigHub.Repositories
         {
             _context.Gigs.Add(gig);
         }
-
-        public void Submit()
-        {
-            _context.SaveChanges();
-        }
     }
 }
