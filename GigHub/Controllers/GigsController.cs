@@ -15,9 +15,9 @@ namespace GigHub.Controllers
     public class GigsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
-        public GigsController()
+        public GigsController(IUnitOfWork unitOfWork)
         {
-            _unitOfWork = new UnitOfWork(new ApplicationDbContext());
+            _unitOfWork = unitOfWork;
         }
         [Authorize]
         public ActionResult Mine()
