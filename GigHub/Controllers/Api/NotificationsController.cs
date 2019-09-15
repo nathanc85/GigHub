@@ -6,8 +6,9 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using GigHub.App_Start;
-using GigHub.Dtos;
-using GigHub.Models;
+using GigHub.Core.Dtos;
+using GigHub.Core.Models;
+using GigHub.Persistence;
 using Microsoft.AspNet.Identity;
 
 namespace GigHub.Controllers.Api
@@ -15,7 +16,7 @@ namespace GigHub.Controllers.Api
     [Authorize]
     public class NotificationsController : ApiController
     {
-        ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public NotificationsController()
         {

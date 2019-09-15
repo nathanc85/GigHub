@@ -1,7 +1,7 @@
-﻿using GigHub.Models;
+﻿using GigHub.Core.Models;
 using GigHub.Persistence;
 using GigHub.Repositories;
-using GigHub.ViewModels;
+using GigHub.Core.ViewModels;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -9,6 +9,7 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using GigHub.Core;
 
 namespace GigHub.Controllers
 {
@@ -165,10 +166,12 @@ namespace GigHub.Controllers
                 var currentUser = User.Identity.GetUserId();
 
                 // Find out if the user is going.
-                viewModel.IsAttending = _unitOfWork.Attendances.UserIsAttendingGig(gig.Id, currentUser);
+                viewModel.IsAttending =
+                    _unitOfWork.Attendances.GetAttendance(gig.Id, currentUser) != null;
 
                 // Find out if the user is following the artist.
-                viewModel.IsFollowing = _unitOfWork.Followings.UserFollowingArtist(gig.ArtistId, currentUser);
+                viewModel.IsFollowing =
+                    _unitOfWork.Followings.GetFollowing(currentUser, gig.ArtistId) != null;
             }
 
             return View("GigDetails", viewModel);

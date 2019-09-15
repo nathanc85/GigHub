@@ -1,5 +1,6 @@
-﻿using GigHub.Dtos;
-using GigHub.Models;
+﻿using GigHub.Core.Dtos;
+using GigHub.Core.Models;
+using GigHub.Persistence;
 using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace GigHub.Controllers.Api
     [Authorize]
     public class FollowingsController : ApiController
     {
-        ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
         public FollowingsController()
         {
             _context = new ApplicationDbContext();
