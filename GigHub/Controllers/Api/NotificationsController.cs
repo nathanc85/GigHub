@@ -6,31 +6,29 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using GigHub.App_Start;
+using GigHub.Core;
 using GigHub.Core.Dtos;
 using GigHub.Core.Models;
 using GigHub.Persistence;
 using Microsoft.AspNet.Identity;
+using WebGrease.Css.Extensions;
 
 namespace GigHub.Controllers.Api
 {
     [Authorize]
     public class NotificationsController : ApiController
     {
-        private readonly ApplicationDbContext _context;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public NotificationsController()
+        public NotificationsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         public IEnumerable<NotificationDto> GetNewNotifications()
         {
             var currentUser = User.Identity.GetUserId();
-            var notifications = _context.UserNotifications
-                .Where(un => un.UserId == currentUser && !un.IsRead)
-                .Select(un => un.Notification)
-                .Include(g => g.Gig.Artist)
-                .ToList();
+            var notifications = _unitOfWork.Notifications.GetNewNotificationsFor(currentUser);
 
             var mapper = MappingConfig.GetMapper();
             return notifications.Select(mapper.Map<Notification, NotificationDto>);
@@ -41,17 +39,15 @@ namespace GigHub.Controllers.Api
         {
             var currentUser = User.Identity.GetUserId();
 
-            var userNotifications = _context.UserNotifications
-                                        .Where(un => un.UserId == currentUser && !un.IsRead)
-                                        .ToList();
+            var notifications = _unitOfWork.UserNotifications.GetUserNotificationsFor(currentUser);
 
             //foreach (var userNotification in userNotifications)
             //{
             //    userNotification.IsRead = true;
             //}
 
-            userNotifications.ForEach(un => un.Read());
-            _context.SaveChanges();
+            notifications.ForEach(un => un.Read());
+            _unitOfWork.Complete();
             return Ok();
         }
     }

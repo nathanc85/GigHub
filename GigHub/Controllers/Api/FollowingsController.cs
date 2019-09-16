@@ -1,4 +1,5 @@
-﻿using GigHub.Core.Dtos;
+﻿using GigHub.Core;
+using GigHub.Core.Dtos;
 using GigHub.Core.Models;
 using GigHub.Persistence;
 using Microsoft.AspNet.Identity;
@@ -14,31 +15,27 @@ namespace GigHub.Controllers.Api
     [Authorize]
     public class FollowingsController : ApiController
     {
-        private readonly ApplicationDbContext _context;
-        public FollowingsController()
+        private readonly IUnitOfWork _unitOfWork;
+        public FollowingsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         [HttpPost]
         public IHttpActionResult Follow(FollowingDto dto)
         {
             var currentUser = User.Identity.GetUserId();
-            var exists = _context.Followings.Any(f => f.FolloweeId == dto.FolloweeId && f.FollowerId == currentUser);
+            var following = _unitOfWork.Followings.GetFollowing(currentUser, dto.FolloweeId);
+            if (following != null)
+                return BadRequest("Following already exists.");
 
-            if (exists)
-            {
-                return BadRequest("You already follow this artist.");
-            }
-
-            Following newFollowing = new Following()
+            following = new Following
             {
                 FollowerId = currentUser,
                 FolloweeId = dto.FolloweeId
             };
-
-            _context.Followings.Add(newFollowing);
-            _context.SaveChanges();
+            _unitOfWork.Followings.Add(following);
+            _unitOfWork.Complete();
 
             return Ok();
         }
@@ -47,16 +44,13 @@ namespace GigHub.Controllers.Api
         public IHttpActionResult Unfollow(string id) {
             var currentUser = User.Identity.GetUserId();
 
-            var following = _context.Followings
-                .SingleOrDefault(f => f.FolloweeId == id && f.FollowerId == currentUser);
+            var following = _unitOfWork.Followings.GetFollowing(currentUser, id);
 
             if (following == null)
-            {
                 return NotFound();
-            }
 
-            _context.Followings.Remove(following);
-            _context.SaveChanges();
+            _unitOfWork.Followings.Remove(following);
+            _unitOfWork.Complete();
 
             return Ok(id);
         }

@@ -31,5 +31,13 @@ namespace GigHub.Repositories
         {
             _context.Followings.Remove(following);
         }
+
+        public IEnumerable<ApplicationUser> GetFollowees(string userId)
+        {
+           return  _context.Followings
+                .Where(f => f.FollowerId == userId)
+                .Select(u => u.Followee)
+                .ToList();
+        }
     }
 }

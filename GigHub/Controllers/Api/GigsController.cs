@@ -8,16 +8,18 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using GigHub.Core;
 
 namespace GigHub.Controllers.Api
 {
     [Authorize]
     public class GigsController : ApiController
     {
-        private readonly ApplicationDbContext _context;
-        public GigsController()
+        private readonly IUnitOfWork _unitOfWork;
+
+        public GigsController(IUnitOfWork unitOfWork)
         {
-            _context = new ApplicationDbContext();
+            _unitOfWork = unitOfWork;
         }
 
         [HttpDelete]
@@ -26,20 +28,19 @@ namespace GigHub.Controllers.Api
             // Get the current logged in user.
             var currentId = User.Identity.GetUserId();
 
-            // Find the gig.
-            var gig = _context.Gigs
-                .Include(g => g.Attendances.Select(a => a.Attendee))
-                .Single(g => g.Id == id && g.ArtistId == currentId);
+            var gig = _unitOfWork.Gigs.GetGigWithAttendees(id);
 
-            // If the gig is flagged as Canceled then return NotFound.
+            //TODO: Bug - if gig == null
             if (gig.IsCanceled)
-            {
                 return NotFound();
-            }
+
+            if (gig.ArtistId != currentId)
+                return Unauthorized();
 
             gig.Cancel();
-           
-            _context.SaveChanges();
+
+            _unitOfWork.Complete();
+
             return Ok();
         }
     }

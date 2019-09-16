@@ -1,4 +1,5 @@
 ﻿using GigHub.Core.Models;
+using System.Collections.Generic;
 
 namespace GigHub.Core.Repositories
 {
@@ -7,5 +8,6 @@ namespace GigHub.Core.Repositories
         Following GetFollowing(string followerId, string followeeId);
         void Add(Following following);
         void Remove(Following following);
+        IEnumerable<ApplicationUser> GetFollowees(string currentUser);
     }
 }
