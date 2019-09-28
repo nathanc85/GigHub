@@ -16,6 +16,9 @@ namespace GigHub.Controllers
     public class GigsController : Controller
     {
         private readonly IUnitOfWork _unitOfWork;
+
+        public object MockCurrentUser { get; set; }
+
         public GigsController(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
