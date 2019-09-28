@@ -94,7 +94,6 @@
   <ItemGroup>
     <Compile Include="Controllers\Api\GigsControllerTests.cs" />
     <Compile Include="Extensions\ApiControllerExtentions.cs" />
-    <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
