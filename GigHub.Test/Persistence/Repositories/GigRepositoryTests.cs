@@ -38,5 +38,20 @@ namespace GigHub.Test.Persistence.Repositories
             // Assert
             gigs.Should().BeEmpty();
         }
+
+        [TestMethod]
+        public void GetFutureGigsWithGenre_GigIsCancelled_ShouldNotBeReturned()
+        {
+            // Arrange
+            var gig = new Gig() { DateTime = DateTime.Now.AddDays(1), ArtistId = "1" };
+            gig.Cancel();
+            _mockGigs.SetSource(new List<Gig> { gig });
+
+            // Act
+            var gigs = _repository.GetFutureGigsWithGenre("1");
+
+            // Assert
+            gigs.Should().BeEmpty();
+        }
     }
 }
