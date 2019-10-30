@@ -16,15 +16,22 @@ namespace GigHub.Test.Persistence.Repositories
     {
         private GigRepository _repository;
         private Mock<DbSet<Gig>> _mockGigs;
+        private Mock<DbSet<Attendance>> _mockAttendances;
         [TestInitialize]
         public void TestInitialize()
         {
             var mockContext = new Mock<IApplicationDbContext>();
+
             _mockGigs = new Mock<DbSet<Gig>>();
             mockContext.SetupGet(c => c.Gigs).Returns(_mockGigs.Object);
+
+            _mockAttendances = new Mock<DbSet<Attendance>>();
+            mockContext.SetupGet(c => c.Attendances).Returns(_mockAttendances.Object);
+
             _repository = new GigRepository(mockContext.Object);
         }
 
+        // Tests for GetGigWithArtistAndGenre.
         [TestMethod]
         public void GetFutureGigsWithGenre_GigIsInThePast_ShouldNotBeReturned()
         {
@@ -80,6 +87,39 @@ namespace GigHub.Test.Persistence.Repositories
 
             // Assert
             gigs.Should().HaveCount(1);
+        }
+
+        // Tests for GetGigsUserAttending.
+        [TestMethod]
+        public void GetGigsUserAttending_GigIsFromDifferentArtist_ShouldNotBeReturned()
+        {
+            // Arrange
+            var gig = new Gig() { DateTime = DateTime.Now.AddDays(1)};
+            var attendance = new Attendance() { Gig = gig, AttendeeId = "1" };
+
+            _mockAttendances.SetSource(new List<Attendance> { attendance });
+
+            // Act
+            var attendances = _repository.GetGigsUserAttending(attendance.AttendeeId + "-");
+
+            // Assert
+            attendances.Should().BeEmpty();
+        }
+
+        [TestMethod]
+        public void GetGigsUserAttending_GigIsFromThePast_ShouldNotBeReturned()
+        {
+            // Arrange
+            var gig = new Gig() { DateTime = DateTime.Now.AddDays(-1)};
+            var attendance = new Attendance() { Gig = gig, AttendeeId = "1" };
+
+            _mockAttendances.SetSource(new List<Attendance> { attendance });
+
+            // Act
+            var attendances = _repository.GetGigsUserAttending(attendance.AttendeeId);
+
+            // Assert
+            attendances.Should().BeEmpty();
         }
     }
 }

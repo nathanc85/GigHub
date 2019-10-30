@@ -35,6 +35,7 @@ namespace GigHub.Persistence.Repositories
             return _context.Attendances
                 .Where(a => a.AttendeeId == currentUser)
                 .Select(g => g.Gig)
+                .Where(g => g.DateTime >= DateTime.Now && !g.IsCanceled)
                 .Include(a => a.Artist)
                 .Include(g => g.Genre)
                 .ToList();
