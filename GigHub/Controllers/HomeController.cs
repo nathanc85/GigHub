@@ -1,5 +1,5 @@
 ﻿using GigHub.Core.Models;
-using GigHub.Repositories;
+using GigHub.Persistence.Repositories;
 using GigHub.Core.ViewModels;
 using GigHub.Persistence;
 using Microsoft.AspNet.Identity;

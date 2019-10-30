@@ -1,6 +1,6 @@
 ﻿using System;
 using GigHub.Persistence;
-using GigHub.Repositories;
+using GigHub.Persistence.Repositories;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
 
