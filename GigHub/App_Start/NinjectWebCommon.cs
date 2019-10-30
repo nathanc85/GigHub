@@ -51,7 +51,7 @@ namespace GigHub.App_Start
                 kernel.Bind(x => {
                     x.FromThisAssembly()
                     .SelectAllClasses()
-                    .BindDefaultInterfaces();
+                    .BindDefaultInterface();
                 });
                 return kernel;
             }

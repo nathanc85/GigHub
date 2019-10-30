@@ -231,6 +231,7 @@
     <Compile Include="Persistence\EntityConfigurations\GigConfiguration.cs" />
     <Compile Include="Persistence\EntityConfigurations\NotificationConfiguration.cs" />
     <Compile Include="Persistence\EntityConfigurations\UserNotificationConfiguration.cs" />
+    <Compile Include="Persistence\IApplicationDbContext.cs" />
     <Compile Include="Persistence\Migrations\201908191931544_AddedIsCanceledToGig.cs" />
     <Compile Include="Persistence\Migrations\201908191931544_AddedIsCanceledToGig.Designer.cs">
       <DependentUpon>201908191931544_AddedIsCanceledToGig.cs</DependentUpon>
