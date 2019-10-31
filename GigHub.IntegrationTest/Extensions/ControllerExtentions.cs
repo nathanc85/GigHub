@@ -24,13 +24,9 @@ namespace GigHub.IntegrationTest.Extensions
                 );
             var principal = new GenericPrincipal(identity, null);
 
-            var mockHttpContext = new Mock<HttpContextBase>();
-            mockHttpContext.SetupGet(h => h.User).Returns(principal);
-
-            var mockControllerContext = new Mock<ControllerContext>();
-            mockControllerContext.SetupGet(c => c.HttpContext).Returns(mockHttpContext.Object);
-
-            controller.ControllerContext = mockControllerContext.Object;
+            controller.ControllerContext = Mock.Of<ControllerContext>(c =>
+                c.HttpContext == Mock.Of<HttpContextBase>(h =>
+                                    h.User == principal));
         }
     }
 }
